@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ca2realrealsproject.MainController">
+
+    <!-- Top section with menu and toolbar -->
+    <top>
+        <VBox>
+            <!-- Menu bar for file actions -->
+            <MenuBar>
+                <Menu text="File">
+                    <MenuItem fx:id="loadCoordsMenuItem" text="Load Coordinates..." />
+                </Menu>
+            </MenuBar>
+            <!-- ToolBar with controls (replaces HBox) -->
+            <ToolBar style="-fx-padding: 8;">
+                <Label text="Start:" />
+                <ComboBox fx:id="startBox" prefWidth="120" />
+
+                <Label text="End:" />
+                <ComboBox fx:id="endBox" prefWidth="120" />
+
+                <CheckBox fx:id="usePenalty" text="Use Change Penalty" />
+                <Label text="Penalty:" />
+                <Slider fx:id="penaltySlider" max="10" min="0" prefWidth="120" value="2" />
+
+                <Label text="Avoid:" />
+                <ListView fx:id="avoidList" prefHeight="80" prefWidth="120" />
+
+                <Button fx:id="anyRouteBtn" text="Any Route (DFS)" />
+                <Button fx:id="allRoutesBtn" text="All Routes (DFS)" />
+                <Button fx:id="dijkstraBtn" text="Shortest (Dijkstra)" />
+                <Button fx:id="waypointBtn" text="Waypoint Route" />
+            </ToolBar>
+        </VBox>
+    </top>
+
+    <!-- Center canvas for map display -->
+    <center>
+        <Canvas fx:id="canvas" height="774" width="1234.0" />
+    </center>
+
+</BorderPane>
