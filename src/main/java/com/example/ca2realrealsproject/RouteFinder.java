@@ -10,7 +10,7 @@ public class RouteFinder {
         this.graph = graph;
     }
 
-    /** 1. Any single route via DFS */
+    // Any single route via DFS
     public List<Station> findAnyRoute(Station start, Station end, Set<Station> avoid) {
         Set<Station> visited = new HashSet<>(avoid);
         List<Station> path = new ArrayList<>();
@@ -29,7 +29,7 @@ public class RouteFinder {
         return false;
     }
 
-    /** 2. All routes (up to maxDepth) via DFS permutations */
+    //All routes (up to maxDepth) via DFS permutations
     public List<List<Station>> findAllRoutesDFS(Station start, Station end,
                                                 Set<Station> avoid, int maxDepth) {
         List<List<Station>> results = new ArrayList<>();
@@ -55,12 +55,13 @@ public class RouteFinder {
         visited.remove(cur);
     }
 
-    /** 3. Dijkstra without penalty */
+    //Dijkstra without penalty
+
     public List<Station> dijkstra(Station start, Station end, Set<Station> avoid) {
         return dijkstraInternal(start, end, avoid, 0.0);
     }
 
-    /** 4. Dijkstra with line-change penalty */
+    // Dijkstra with line-change penalty
     public List<Station> dijkstraWithPenalty(Station start, Station end,
                                              Set<Station> avoid, double penalty) {
         return dijkstraInternal(start, end, avoid, penalty);
@@ -116,7 +117,7 @@ public class RouteFinder {
         return path;
     }
 
-    /** 5. Route with waypoints */
+    //Route with waypoints
     public List<Station> routeWithWaypoints(List<Station> waypoints,
                                             boolean useDijkstra,
                                             double penalty,

@@ -8,10 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CSVLoader {
-    /**
-
-     Expects a CSV with columns: Start,Stop,Line,Color
-     weight is defaulted to 1.0 (you can augment with real distances later)*/
+    // Expects a CSV with columns: Start,Stop,Line,Color
+   //  weight is defaulted to 1.0 (you can augment with real distances later
     public static Graph load(String resourceCsv) throws Exception {
         Graph g = new Graph();
         Map<String,Station> stations = new HashMap<>();
