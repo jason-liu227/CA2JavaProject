@@ -32,15 +32,6 @@ public class RouteFinder {
         return false;
     }
 
-    // Finds all possible routes from start to end using DFS
-    // Stops recursion at maxDepth and avoids stations in the avoid set
-    public List<List<Station>> findAllRoutesDFS(Station start, Station end,
-                                                Set<Station> avoid, int maxDepth) {
-        List<List<Station>> results = new ArrayList<>(); // Stores all valid paths
-        Deque<Station> path = new ArrayDeque<>();        // Stack-like structure for current path
-        dfsAll(start, end, avoid, new HashSet<>(avoid), path, results, maxDepth);
-        return results;
-    }
 
     // Recursive DFS to collect all valid paths up to maxDepth
     private void dfsAll(Station cur, Station end, Set<Station> avoid,

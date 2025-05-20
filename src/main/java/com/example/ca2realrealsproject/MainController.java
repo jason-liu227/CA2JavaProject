@@ -58,7 +58,6 @@ public class MainController implements Initializable {
 
             // 5) Wire up buttons
             anyRouteBtn.setOnAction(e -> handleAnyRoute());
-            allRoutesBtn.setOnAction(e -> handleAllRoutes());
             dijkstraBtn.setOnAction(e -> handleDijkstra());
             waypointBtn.setOnAction(e -> handleWaypoint());
 
@@ -79,18 +78,6 @@ public class MainController implements Initializable {
         paintRoute(path);                                // Display the route on the canvas
     }
 
-    // Handles "Find All Routes" action
-// Uses DFS to find all valid routes from start to end within a max depth,
-// avoiding selected stations. Paints the first route found (could be extended to choose).
-    private void handleAllRoutes() {
-        Station s = stationMap.get(startBox.getValue());
-        Station t = stationMap.get(endBox.getValue());
-        Set<Station> avoid = getAvoidSet();
-        List<List<Station>> all = finder.findAllRoutesDFS(s, t, avoid, 20); // Max depth = 20
-        if (!all.isEmpty()) {
-            paintRoute(all.get(0)); // Only paints the first route (could be extended to show others)
-        }
-    }
 
     // Handles "Dijkstra" action
 // Uses Dijkstra's algorithm to find the shortest path,

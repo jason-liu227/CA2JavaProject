@@ -31,7 +31,6 @@
                 <ListView fx:id="avoidList" prefHeight="80" prefWidth="120" />
 
                 <Button fx:id="anyRouteBtn" text="Any Route (DFS)" />
-                <Button fx:id="allRoutesBtn" text="All Routes (DFS)" />
                 <Button fx:id="dijkstraBtn" text="Shortest (Dijkstra)" />
                 <Button fx:id="waypointBtn" text="Waypoint Route" />
             </ToolBar>
