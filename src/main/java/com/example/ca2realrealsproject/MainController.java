@@ -68,43 +68,52 @@ public class MainController implements Initializable {
         }
     }
 
+    // Handles "Find Any Route" action
+// Uses DFS to find a single valid route from the start station to the end station,
+// avoiding any stations selected in the UI, and paints the route on the map.
     private void handleAnyRoute() {
-        Station s = stationMap.get(startBox.getValue());
-        Station t = stationMap.get(endBox.getValue());
-        Set<Station> avoid = getAvoidSet();
-        List<Station> path = finder.findAnyRoute(s, t, avoid);
-        paintRoute(path);
+        Station s = stationMap.get(startBox.getValue()); // Get start station from dropdown
+        Station t = stationMap.get(endBox.getValue());   // Get end station from dropdown
+        Set<Station> avoid = getAvoidSet();              // Get user-selected stations to avoid
+        List<Station> path = finder.findAnyRoute(s, t, avoid); // Find one route via DFS
+        paintRoute(path);                                // Display the route on the canvas
     }
 
+    // Handles "Find All Routes" action
+// Uses DFS to find all valid routes from start to end within a max depth,
+// avoiding selected stations. Paints the first route found (could be extended to choose).
     private void handleAllRoutes() {
         Station s = stationMap.get(startBox.getValue());
         Station t = stationMap.get(endBox.getValue());
         Set<Station> avoid = getAvoidSet();
-        // e.g. maxDepth = 20
-        List<List<Station>> all = finder.findAllRoutesDFS(s, t, avoid, 20);
+        List<List<Station>> all = finder.findAllRoutesDFS(s, t, avoid, 20); // Max depth = 20
         if (!all.isEmpty()) {
-            // Just show the first one, or extend to let user pick
-            paintRoute(all.get(0));
+            paintRoute(all.get(0)); // Only paints the first route (could be extended to show others)
         }
     }
 
+    // Handles "Dijkstra" action
+// Uses Dijkstra's algorithm to find the shortest path,
+// optionally applying a penalty for line changes if the user enabled it.
     private void handleDijkstra() {
         Station s = stationMap.get(startBox.getValue());
         Station t = stationMap.get(endBox.getValue());
         Set<Station> avoid = getAvoidSet();
-        double pen = usePenalty.isSelected() ? penaltySlider.getValue() : 0.0;
+        double pen = usePenalty.isSelected() ? penaltySlider.getValue() : 0.0; // Penalty value
         List<Station> path = usePenalty.isSelected()
-                ? finder.dijkstraWithPenalty(s, t, avoid, pen)
-                : finder.dijkstra(s, t, avoid);
-        paintRoute(path);
+                ? finder.dijkstraWithPenalty(s, t, avoid, pen) // Use Dijkstra with penalty
+                : finder.dijkstra(s, t, avoid);                // Use normal Dijkstra
+        paintRoute(path); // Paint the resulting shortest route
     }
 
+    // Handles "Route with Waypoint" action
+// Prompts user for a waypoint station and finds a route that goes through:
+// start → waypoint → end using Dijkstra (with optional penalty).
     private void handleWaypoint() {
-        // Example: prompt user for one waypoint via dialog
-        TextInputDialog dialog = new TextInputDialog();
+        TextInputDialog dialog = new TextInputDialog();             // Dialog to enter waypoint
         dialog.setHeaderText("Enter waypoint station name:");
-        Optional<String> wp = dialog.showAndWait();
-        if (wp.isPresent() && stationMap.containsKey(wp.get())) {
+        Optional<String> wp = dialog.showAndWait();                 // Wait for user input
+        if (wp.isPresent() && stationMap.containsKey(wp.get())) {   // Validate input
             List<Station> pts = Arrays.asList(
                     stationMap.get(startBox.getValue()),
                     stationMap.get(wp.get()),
@@ -112,23 +121,25 @@ public class MainController implements Initializable {
             );
             Set<Station> avoid = getAvoidSet();
             double pen = usePenalty.isSelected() ? penaltySlider.getValue() : 0.0;
-            List<Station> path = finder.routeWithWaypoints(pts, true, pen, avoid);
+            List<Station> path = finder.routeWithWaypoints(pts, true, pen, avoid); // Always using Dijkstra
             paintRoute(path);
         }
     }
 
+    // Helper method: gets the set of stations the user has selected to avoid
     private Set<Station> getAvoidSet() {
-        return avoidList.getSelectionModel()
+        return avoidList.getSelectionModel()              // Get selected items from ListView
                 .getSelectedItems()
                 .stream()
-                .map(stationMap::get)
+                .map(stationMap::get)                     // Convert station names to Station objects
                 .collect(Collectors.toSet());
     }
 
+    // Draws the base map image onto the canvas (used before painting a route)
     private void paintBaseMap() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        gc.drawImage(mapImage, 0, 0, canvas.getWidth(), canvas.getHeight());
+        GraphicsContext gc = canvas.getGraphicsContext2D();         // Get canvas context
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());  // Clear any old drawings
+        gc.drawImage(mapImage, 0, 0, canvas.getWidth(), canvas.getHeight()); // Draw background map
     }
 
     private void paintRoute(List<Station> path) {
@@ -143,18 +154,9 @@ public class MainController implements Initializable {
             if (pa == null || pb == null) continue;  // skip if coordinates missing
             gc.strokeLine(pa.getX(), pa.getY(), pb.getX(), pb.getY());
             gc.fillOval(pa.getX() - 5, pa.getY() - 5, 10, 10);
-//            String line = a.getLines().stream()
-//                    .filter(b.getLines()::contains)
-//                    .findFirst()
-//                    .orElse("");
-//            gc.setStroke(Color.web(lineColorHex(line)));
-//            gc.strokeLine(pa[0], pa[1], pb[0], pb[1]);
-//            gc.fillOval(pa[0] - 5, pa[1] - 5, 10, 10);
         }
         // Last station marker
         Station last = path.get(path.size() - 1);
-//        double[] pl = geoToPixel(last);
-//        gc.fillOval(pl[0] - 5, pl[1] - 5, 10, 10);
     }
 
     private void loadPixelCoordinates(String resourcePath) {
@@ -175,15 +177,8 @@ public class MainController implements Initializable {
         }
     }
 
-    /** Stub: replace with real lat/long → pixel mapping */
-//    private double[] geoToPixel(Station s) {
-//        return new double[]{
-//                Math.random() * canvas.getWidth(),
-//                Math.random() * canvas.getHeight()
-//        };
-//    }
 
-    /** Hex colors matching U-Bahn lines */
+    // Hex colors matching U-Bahn lines
     private static String lineColorHex(String lineName) {
         switch (lineName) {
             case "1": return "#FF0000"; // U1 red
